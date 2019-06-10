@@ -36,13 +36,13 @@ router.put('/:login', (req, res)=>{
         name: req.body.name,
         phone: req.body.phone,
         password: req.body.password,
-        balance: req.body.balance
+        amount: req.body.amount
     });
     var obj = {
         name:user.name,
         phone: user.phone,
         password: user.password,
-        balance: user.balance
+        amount: user.amount
     }
 })
 
@@ -51,12 +51,12 @@ router.post('/:sendmoney', (req, res)=> {
     return res.status(400).send('No money is added to the user by another user');
 
     var money = new money({
-        phone: user.phone,
-        balance: user.balance
+        senderPhone: user.senderPhone,
+        amount: user.amount
     });
     var obj = {
         phone: user.phone,
-        balance: user.balance
+        amount: user.amount
     }
 
     paytm.save((err, doc)=>{
@@ -73,17 +73,21 @@ router.put('/:transaction', (req, res)=> {
     return res.status(400).send('No transaction records are found');
 
     var transaction = new transaction({
-        balance: user.balance
+        senderPhone: user.senderPhone,
+        amount: user.amount,
+        receiverPhone: user.receiverPhone
     });
 
     var obj = {
-        balance: user.balance
+        senderPhone: user.senderPhone,
+        amount: user.amount,
+        receiverPhone: user.receiverPhone
     }
 })
 
 router.get('/:admin', (req, res)=> {
     if(!objectId.isValid(req.params.id))
-    return res.status(400).send('No current balance records are found');
+    return res.status(400).send('No current amount records are found');
 
     Paytm.findById(req.params.id, (err,doc)=>{
         if(!err){
